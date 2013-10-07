@@ -1,7 +1,9 @@
+Taken entirely from [cloudbau's vagrant-openstack-plugin](https://github.com/cloudbau/vagrant-openstack-plugin)
+
 # Vagrant HP Cloud Provider
 
 This is a [Vagrant](http://www.vagrantup.com) 1.1+ plugin that adds a
-[HP Cloud](http://www.hp.org) provider to Vagrant,
+[HP Cloud](http://www.hpcloud.com) provider to Vagrant,
 allowing Vagrant to control and provision machines within an HP
 cloud.
 
@@ -40,7 +42,7 @@ manually within a `config.vm.provider` block. So first, add the dummy
 box using any name you want:
 
 ```
-$ vagrant box add dummy https://github.com/cloudbau/vagrant-hp-plugin/raw/master/dummy.box
+$ vagrant box add dummy https://github.com/j3p0uk/vagrant-hp-plugin/raw/master/dummy.box
 ...
 ```
 
@@ -94,7 +96,7 @@ no preconfigured defaults.
 
 Every provider in Vagrant must introduce a custom box format. This
 provider introduces `hp` boxes. You can view an example box in
-the [example_box/ directory](https://github.com/cloudbau/vagrant-hp-plugin/tree/master/example_box).
+the [example_box/ directory](https://github.com/j3p0uk/vagrant-hp-plugin/tree/master/example_box).
 That directory also contains instructions on how to build a box.
 
 The box format is basically just the required `metadata.json` file
