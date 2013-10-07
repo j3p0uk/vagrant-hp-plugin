@@ -1,27 +1,27 @@
 require "log4r"
 
 module VagrantPlugins
-  module OpenStack
+  module HP
     module Action
       # This action reads the SSH info for the machine and puts it into the
       # `:machine_ssh_info` key in the environment.
       class ReadSSHInfo
         def initialize(app, env)
           @app    = app
-          @logger = Log4r::Logger.new("vagrant_openstack::action::read_ssh_info")
+          @logger = Log4r::Logger.new("vagrant_hp::action::read_ssh_info")
         end
 
         def call(env)
-          env[:machine_ssh_info] = read_ssh_info(env[:openstack_compute], env[:machine])
+          env[:machine_ssh_info] = read_ssh_info(env[:hp_compute], env[:machine])
 
           @app.call(env)
         end
 
-        def read_ssh_info(openstack, machine)
+        def read_ssh_info(hp, machine)
           return nil if machine.id.nil?
 
           # Find the machine
-          server = openstack.servers.get(machine.id)
+          server = hp.servers.get(machine.id)
           if server.nil?
             # The machine can't be found
             @logger.info("Machine couldn't be found, assuming it got destroyed.")
@@ -33,7 +33,7 @@ module VagrantPlugins
 
           # Print a list of the available networks
           server.addresses.each do |network_name, network_info|
-            @logger.debug("OpenStack Network Name: #{network_name}")
+            @logger.debug("HP Network Name: #{network_name}")
           end
 
           if config.network
@@ -45,25 +45,25 @@ module VagrantPlugins
           # If host is still nil, try to find the IP address another way
           if host.nil?
             @logger.debug("Was unable to determine what network to use. Trying to find a valid IP to use.")
-            if server.public_ip_addresses.length > 0
-              @logger.debug("Public IP addresses available: #{server.public_ip_addresses}")
-              if config.floating_ip
-                if server.public_ip_addresses.include?(config.floating_ip)
-                  @logger.debug("Using the floating IP defined in Vagrantfile.")
-                  host = config.floating_ip
-                else
-                  @logger.debug("The floating IP that was specified is not available to this instance.")
-                  raise Errors::FloatingIPNotValid
-                end
-              else
+#            if server.public_ip_addresses.length > 0
+#              @logger.debug("Public IP addresses available: #{server.public_ip_addresses}")
+#              if config.floating_ip
+#                if server.public_ip_addresses.include?(config.floating_ip)
+#                  @logger.debug("Using the floating IP defined in Vagrantfile.")
+#                  host = config.floating_ip
+#                else
+#                  @logger.debug("The floating IP that was specified is not available to this instance.")
+#                  raise Errors::FloatingIPNotValid
+#                end
+#              else
                 host = server.public_ip_address
                 @logger.debug("Using the first available public IP address: #{host}.")
-              end
-            elsif server.private_ip_addresses.length > 0
-              @logger.debug("Private IP addresses available: #{server.private_ip_addresses}")
-              host = server.private_ip_address
-              @logger.debug("Using the first available private IP address: #{host}.")
-            end
+#              end
+#            elsif server.private_ip_addresses.length > 0
+#              @logger.debug("Private IP addresses available: #{server.private_ip_addresses}")
+#              host = server.private_ip_address
+#              @logger.debug("Using the first available private IP address: #{host}.")
+#            end
           end
 
           # If host got this far and is still nil/empty, raise an error or

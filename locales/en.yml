@@ -1,5 +1,5 @@
 en:
-  vagrant_openstack:
+  vagrant_hp:
     already_created: |-
       The server is already created.
     deleting_server: |-
@@ -23,7 +23,7 @@ en:
     waiting_for_ssh: |-
       Waiting for SSH to become available...
     warn_networks: |-
-      Warning! The OpenStack provider doesn't support any of the Vagrant
+      Warning! The HP provider doesn't support any of the Vagrant
       high-level network configurations (`config.vm.network`). They
       will be silently ignored.
 
@@ -61,7 +61,7 @@ en:
         network names.
       floating_ip_not_valid: |-
         The floating IP specified in the Vagrantfile does not match an
-        available public IP address returned by OpenStack.
+        available public IP address returned by HP.
     states:
       short_active: |-
         active

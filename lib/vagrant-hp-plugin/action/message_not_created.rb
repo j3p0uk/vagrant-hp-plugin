@@ -1,13 +1,13 @@
 module VagrantPlugins
-  module OpenStack
+  module HP
     module Action
-      class IsCreated
+      class MessageNotCreated
         def initialize(app, env)
           @app = app
         end
 
         def call(env)
-          env[:result] = env[:machine].state.id != :not_created
+          env[:ui].info(I18n.t("vagrant_hp.not_created"))
           @app.call(env)
         end
       end

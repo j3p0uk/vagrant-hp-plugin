@@ -1,14 +1,14 @@
 require "vagrant"
 
 module VagrantPlugins
-  module OpenStack
+  module HP
     class Config < Vagrant.plugin("2", :config)
-      # The API key to access OpenStack.
+      # The API key to access HP.
       #
       # @return [String]
       attr_accessor :api_key
 
-      # The endpoint to access OpenStack. If nil, it will default
+      # The endpoint to access HP. If nil, it will default
       # to DFW.
       #
       # @return [String]
@@ -27,7 +27,7 @@ module VagrantPlugins
       # here.
       attr_accessor :server_name
 
-      # The username to access OpenStack.
+      # The username to access HP.
       #
       # @return [String]
       attr_accessor :username
@@ -47,7 +47,7 @@ module VagrantPlugins
       #
       attr_accessor :address_id
 
-      # Pass hints to the OpenStack scheduler, e.g. { "cell": "some cell name" }
+      # Pass hints to the HP scheduler, e.g. { "cell": "some cell name" }
       attr_accessor :scheduler_hints
 
       # Specify the availability zone in which to create the instance
@@ -59,7 +59,7 @@ module VagrantPlugins
       # @return [Array[String]]
       attr_accessor :security_groups
 
-      # The SSH username to use with this OpenStack instance. This overrides
+      # The SSH username to use with this HP instance. This overrides
       # the `config.ssh.username` variable.
       #
       # @return [String]
@@ -75,7 +75,7 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :tenant
 
-      # User data to be sent to the newly created OpenStack instance. Use this
+      # User data to be sent to the newly created HP instance. Use this
       # e.g. to inject a script at boot time.
       #
       # @return [String]
@@ -86,7 +86,7 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :floating_ip
 
-      # The region to specify when the OpenStack cloud has multiple regions
+      # The region to specify when the HP cloud has multiple regions
       #
       # @return [String]
       attr_accessor :region
@@ -144,10 +144,10 @@ module VagrantPlugins
       def validate(machine)
         errors = []
 
-        errors << I18n.t("vagrant_openstack.config.api_key_required") if !@api_key
-        errors << I18n.t("vagrant_openstack.config.username_required") if !@username
+        errors << I18n.t("vagrant_hp.config.api_key_required") if !@api_key
+        errors << I18n.t("vagrant_hp.config.username_required") if !@username
 
-        { "OpenStack Provider" => errors }
+        { "HP Provider" => errors }
       end
     end
   end

@@ -3,7 +3,7 @@ require "pathname"
 require "vagrant/action/builder"
 
 module VagrantPlugins
-  module OpenStack
+  module HP
     module Action
       # Include the built-in modules so we can use them as top-level things.
       include Vagrant::Action::Builtin
@@ -18,7 +18,7 @@ module VagrantPlugins
               next
             end
 
-            b2.use ConnectOpenStack
+            b2.use ConnectHP
             b2.use DeleteServer
           end
         end
@@ -30,7 +30,7 @@ module VagrantPlugins
       def self.action_read_ssh_info
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenStack
+          b.use ConnectHP
           b.use ReadSSHInfo
         end
       end
@@ -41,7 +41,7 @@ module VagrantPlugins
       def self.action_read_state
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenStack
+          b.use ConnectHP
           b.use ReadState
         end
       end
@@ -84,7 +84,7 @@ module VagrantPlugins
               next
             end
 
-            b2.use ConnectOpenStack
+            b2.use ConnectHP
             b2.use Provision
             b2.use SyncFolders
             b2.use SetHostname
@@ -111,7 +111,7 @@ module VagrantPlugins
 
       # The autoload farm
       action_root = Pathname.new(File.expand_path("../action", __FILE__))
-      autoload :ConnectOpenStack, action_root.join("connect_openstack")
+      autoload :ConnectHP, action_root.join("connect_hp")
       autoload :CreateServer, action_root.join("create_server")
       autoload :DeleteServer, action_root.join("delete_server")
       autoload :IsCreated, action_root.join("is_created")

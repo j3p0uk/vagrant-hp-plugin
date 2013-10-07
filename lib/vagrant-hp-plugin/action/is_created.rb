@@ -1,16 +1,13 @@
 module VagrantPlugins
-  module OpenStack
+  module HP
     module Action
-      class WarnNetworks
+      class IsCreated
         def initialize(app, env)
           @app = app
         end
 
         def call(env)
-          if env[:machine].config.vm.networks.length > 0
-            env[:ui].warn(I18n.t("vagrant_openstack.warn_networks"))
-          end
-
+          env[:result] = env[:machine].state.id != :not_created
           @app.call(env)
         end
       end

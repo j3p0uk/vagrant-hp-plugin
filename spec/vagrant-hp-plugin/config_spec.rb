@@ -1,6 +1,6 @@
-require "vagrant-openstack-plugin/config"
+require "vagrant-hp-plugin/config"
 
-describe VagrantPlugins::OpenStack::Config do
+describe VagrantPlugins::HP::Config do
   describe "defaults" do
     let(:vagrant_public_key) { Vagrant.source_root.join("keys/vagrant.pub") }
 

@@ -4,15 +4,15 @@ require "log4r"
 require 'vagrant/util/retryable'
 
 module VagrantPlugins
-  module OpenStack
+  module HP
     module Action
-      # This creates the OpenStack server.
+      # This creates the HP server.
       class CreateServer
         include Vagrant::Util::Retryable
 
         def initialize(app, env)
           @app    = app
-          @logger = Log4r::Logger.new("vagrant_openstack::action::create_server")
+          @logger = Log4r::Logger.new("vagrant_hp::action::create_server")
         end
 
         def call(env)
@@ -20,13 +20,13 @@ module VagrantPlugins
           config   = env[:machine].provider_config
 
           # Find the flavor
-          env[:ui].info(I18n.t("vagrant_openstack.finding_flavor"))
-          flavor = find_matching(env[:openstack_compute].flavors.all, config.flavor)
+          env[:ui].info(I18n.t("vagrant_hp.finding_flavor"))
+          flavor = find_matching(env[:hp_compute].flavors.all, config.flavor)
           raise Errors::NoMatchingFlavor if !flavor
 
           # Find the image
-          env[:ui].info(I18n.t("vagrant_openstack.finding_image"))
-          image = find_matching(env[:openstack_compute].images, config.image)
+          env[:ui].info(I18n.t("vagrant_hp.finding_image"))
+          image = find_matching(env[:hp_compute].images, config.image)
           raise Errors::NoMatchingImage if !image
 
           # Figure out the name for the server
@@ -34,8 +34,8 @@ module VagrantPlugins
 
           # Build the options for launching...
           options = {
-            :flavor_ref  => flavor.id,
-            :image_ref   => image.id,
+            :flavor_id  => flavor.id,
+            :image_id   => image.id,
             :name        => server_name,
             :key_name    => config.keypair_name,
             :metadata    => config.metadata,
@@ -47,13 +47,13 @@ module VagrantPlugins
           
           # Find a network if provided
           if config.network
-            env[:ui].info(I18n.t("vagrant_openstack.finding_network"))
-            network = find_matching(env[:openstack_network].networks, config.network)
+            env[:ui].info(I18n.t("vagrant_hp.finding_network"))
+            network = find_matching(env[:hp_network].networks, config.network)
             options[:nics] = [{"net_id" => network.id}] if network
           end
           
           # Output the settings we're going to use to the user
-          env[:ui].info(I18n.t("vagrant_openstack.launching_server"))
+          env[:ui].info(I18n.t("vagrant_hp.launching_server"))
           env[:ui].info(" -- Flavor: #{flavor.name}")
           env[:ui].info(" -- Image: #{image.name}")
           env[:ui].info(" -- Name: #{server_name}")
@@ -65,13 +65,13 @@ module VagrantPlugins
           end
 
           # Create the server
-          server = env[:openstack_compute].servers.create(options)
+          server = env[:hp_compute].servers.create(options)
 
           # Store the ID right away so we can track it
           env[:machine].id = server.id
 
           # Wait for the server to finish building
-          env[:ui].info(I18n.t("vagrant_openstack.waiting_for_build"))
+          env[:ui].info(I18n.t("vagrant_hp.waiting_for_build"))
           retryable(:on => Fog::Errors::TimeoutError, :tries => 200) do
             # If we're interrupted don't worry about waiting
             next if env[:interrupted]
@@ -86,7 +86,7 @@ module VagrantPlugins
               # Once the server is up and running assign a floating IP if we have one
               if config.floating_ip
                 env[:ui].info( "Using floating IP #{config.floating_ip}")
-                floater = env[:openstack_compute].addresses.find { |thisone| thisone.ip.eql? config.floating_ip }
+                floater = env[:hp_compute].addresses.find { |thisone| thisone.ip.eql? config.floating_ip }
                 floater.server = server
               end
             rescue RuntimeError => e
@@ -102,7 +102,7 @@ module VagrantPlugins
             env[:ui].clear_line
 
             # Wait for SSH to become available
-            env[:ui].info(I18n.t("vagrant_openstack.waiting_for_ssh"))
+            env[:ui].info(I18n.t("vagrant_hp.waiting_for_ssh"))
             while true
               begin
                 # If we're interrupted then just back out
@@ -113,7 +113,7 @@ module VagrantPlugins
               sleep 2
             end
 
-            env[:ui].info(I18n.t("vagrant_openstack.ready"))
+            env[:ui].info(I18n.t("vagrant_hp.ready"))
           end
 
           @app.call(env)

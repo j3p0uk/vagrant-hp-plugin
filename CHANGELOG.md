@@ -1,4 +1,4 @@
-# Changelog for vagrant-openstack-plugin
+# Changelog for vagrant-hp-plugin
 
 ## 0.3.0 (September 25, 2013)
 
