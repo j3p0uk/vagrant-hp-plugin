@@ -91,6 +91,11 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :region
 
+      # The version of API to use for HP Cloud
+      #
+      # @return [String]
+      attr_accessor :version
+
       def initialize
         @api_key  = UNSET_VALUE
         @endpoint = UNSET_VALUE
@@ -110,6 +115,7 @@ module VagrantPlugins
         @user_data = UNSET_VALUE
         @floating_ip = UNSET_VALUE
         @region = UNSET_VALUE
+        @version = UNSET_VALUE
       end
 
       def finalize!
@@ -139,6 +145,7 @@ module VagrantPlugins
         @floating_ip = nil if @floating_ip == UNSET_VALUE
 
         @region = nil if @region == UNSET_VALUE
+        @version = "v2" if @version == UNSET_VALUE
       end
 
       def validate(machine)

@@ -21,6 +21,7 @@ module VagrantPlugins
           username = config.username
           tenant = config.tenant
           region = config.region
+          version = config.version
 
           @logger.info("Connecting to HP...")
           env[:hp_compute] = Fog::Compute.new({
@@ -29,7 +30,8 @@ module VagrantPlugins
             :hp_secret_key => api_key,
             :hp_auth_uri   => endpoint,
             :hp_tenant_id => tenant,
-            :hp_avl_zone => region
+            :hp_avl_zone => region,
+            :version => version
           })
 
           if config.network
@@ -38,7 +40,8 @@ module VagrantPlugins
               :hp_username => username,
               :hp_api_key => api_key,
               :hp_auth_url => endpoint,
-              :hp_tenant => tenant
+              :hp_tenant => tenant,
+              :version => version
             })
           end
 
