@@ -35,12 +35,13 @@ module VagrantPlugins
           })
 
           if config.network
-            env[:hp_network] = Fog::Network.new({
+            env[:hp_network] = Fog::HP::Network.new({
               :provider => :hp,
-              :hp_username => username,
-              :hp_api_key => api_key,
-              :hp_auth_url => endpoint,
-              :hp_tenant => tenant,
+              :hp_access_key  => username,
+              :hp_secret_key => api_key,
+              :hp_auth_uri   => endpoint,
+              :hp_tenant_id => tenant,
+              :hp_avl_zone => region,
               :version => version
             })
           end
